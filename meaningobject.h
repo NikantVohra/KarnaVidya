@@ -43,6 +43,8 @@ public:
     QString getSynonymsList() const;
     void setSynonymsList(const QString &value);
 
+
+
 signals:
 
 public slots:

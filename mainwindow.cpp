@@ -28,15 +28,30 @@ void MainWindow::searchButtonClicked(){
     if(dictionary.contains(word)) {
         ui->englishTextEdit->setText(dictionary[word]->getMeaningEnDescription());
         ui->tamilTextEdit->setText(dictionary[word]->getMeaningTaDescription());
-        ui->synonymList->setText(dictionary[word]->getSynonymsList());
+        populateSynonyms(word);
     }
     else {
         ui->englishTextEdit->setText("No such word available in dictionary");
         ui->tamilTextEdit->setText("No such word available in dictionary");
-        ui->synonymList->setText("");
+        ui->synonymList->clear();
+    }
+}
+void MainWindow::populateSynonyms(QString word){
+    QList<QString> synonyms = dictionary[word]->getSynonymEn();
+    for(int i =0;i < synonyms.size();i++) {
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(synonyms[i]);
+        ui->synonymList->insertItem(i, item);
+
     }
 }
 
+void MainWindow::removeSynonyms() {
+    for(int i = 0; i < ui->synonymList->count(); ++i)
+    {
+        ui->synonymList->takeItem(i);
+    }
+}
 
 void MainWindow::readFile() {
     QFile file(":/Dictionary.txt");

@@ -24,7 +24,9 @@ public:
 private:
     Ui::MainWindow *ui;
     QHash<QString, MeaningObject *> dictionary;
+    void populateSynonyms(QString word);
     void readFile();
+    void removeSynonyms();
 };
 
 #endif // MAINWINDOW_H

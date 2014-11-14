@@ -66,19 +66,6 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QTextEdit" name="synonymList">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>380</y>
-      <width>811</width>
-      <height>211</height>
-     </rect>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
-    </property>
-   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
@@ -128,6 +115,16 @@
     </property>
     <property name="autoDefault">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QListWidget" name="synonymList">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>390</y>
+      <width>801</width>
+      <height>192</height>
+     </rect>
     </property>
    </widget>
   </widget>
