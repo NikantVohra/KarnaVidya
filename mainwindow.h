@@ -20,6 +20,7 @@ public:
     ~MainWindow();
     public slots:
         void searchButtonClicked();
+        void synonymPressed();
 
 private:
     Ui::MainWindow *ui;

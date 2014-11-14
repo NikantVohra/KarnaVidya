@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QJsonDocument>
-
+#include <QShortcut>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,9 +12,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->searchButton, SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
     connect(ui->enterWordEdit, SIGNAL(returnPressed()), this, SLOT(searchButtonClicked()));
-
+    QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Space), ui->synonymList);
+    connect(shortcut, SIGNAL(activated()), this, SLOT(synonymPressed()));
     readFile();
 }
+
 
 
 MainWindow::~MainWindow()
@@ -22,6 +24,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::synonymPressed() {
+    QString synonym = ui->synonymList->currentItem()->text();
+    ui->enterWordEdit->setText(synonym);
+    searchButtonClicked();
+}
 
 void MainWindow::searchButtonClicked(){
     QString word = ui->enterWordEdit->text();
