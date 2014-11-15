@@ -17,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Space), ui->synonymList);
     connect(shortcut, SIGNAL(activated()), this, SLOT(synonymPressed()));
+
     readFile();
 }
 
@@ -35,27 +36,67 @@ void MainWindow::tabChanged() {
 }
 
 void MainWindow::synonymPressed() {
-    QString synonym = ui->synonymList->currentItem()->text();
-    ui->enterWordEdit->setText(synonym);
-    searchButtonClicked();
+    if( ui->synonymList->hasFocus()){
+        QString synonym = ui->synonymList->currentItem()->text();
+         ui->enterWordEdit->setText(synonym);
+        searchButtonClicked();
+    }
 }
 
 void MainWindow::searchButtonClicked(){
     QString word = ui->enterWordEdit->text();
     currentWord = word;
     if(dictionary.contains(word)) {
-        ui->englishPlainTextEdit->setPlainText(dictionary[word]->getMeaningEnDescription());
-        ui->tamilTextEdit->setText(dictionary[word]->getMeaningTaDescription());
+
+        populateEnglishMeaningList();
+        populateTamilMeaningList();
         tabChanged();
         populateSynonyms(word);
     }
     else {
-        ui->englishPlainTextEdit->setPlainText("No such word available in dictionary");
-        ui->tamilTextEdit->setText("No such word available in dictionary");
+        ui->englishMeaningListWidget->clear();
+        ui->tamilMeaningsListWidget->clear();
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText("No such word available in dictionary");
+        ui->englishMeaningListWidget->insertItem(0, item);
+        QListWidgetItem *item1 = new QListWidgetItem;
+        item1->setText("No such word available in dictionary");
+        ui->tamilMeaningsListWidget->insertItem(0, item1);
         tabChanged();
         ui->synonymList->clear();
+
     }
 }
+
+void MainWindow::populateEnglishMeaningList() {
+    ui->englishMeaningListWidget->clear();
+    int count = 1;
+    QString meaningEnDescription;
+    QHash<QString, QString> meaningEn = dictionary[currentWord]->getMeaningEn();
+    foreach (const QString &key, meaningEn.keys()) {
+        meaningEnDescription = QString::number(count) + ". " + key + ":" + meaningEn[key] + "\n";
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(meaningEnDescription);
+        ui->englishMeaningListWidget->insertItem(count-1, item);
+        count++;
+    }
+}
+
+void MainWindow::populateTamilMeaningList() {
+    ui->tamilMeaningsListWidget->clear();
+    int count = 1;
+    QString meaningTaDescription;
+    QHash<QString, QString> meaningTa = dictionary[currentWord]->getMeaningTa();
+    foreach (const QString &key, meaningTa.keys()) {
+        meaningTaDescription = QString::number(count) + ". " + key + ":" + meaningTa[key] + "\n";
+        QListWidgetItem *item = new QListWidgetItem;
+        item->setText(meaningTaDescription);
+        ui->tamilMeaningsListWidget->insertItem(count-1, item);
+        count++;
+    }
+}
+
+
 void MainWindow::populateSynonyms(QString word){
     QList<QString> synonyms = dictionary[word]->getSynonymEn();
     for(int i =0;i < synonyms.size();i++) {

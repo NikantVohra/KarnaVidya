@@ -31,6 +31,8 @@ private:
     void readFile();
     void removeSynonyms();
     void setupTabWidget();
+    void populateEnglishMeaningList();
+    void populateTamilMeaningList();
 };
 
 #endif // MAINWINDOW_H
