@@ -21,13 +21,16 @@ public:
     public slots:
         void searchButtonClicked();
         void synonymPressed();
+        void tabChanged();
 
 private:
     Ui::MainWindow *ui;
     QHash<QString, MeaningObject *> dictionary;
+    QString currentWord;
     void populateSynonyms(QString word);
     void readFile();
     void removeSynonyms();
+    void setupTabWidget();
 };
 
 #endif // MAINWINDOW_H

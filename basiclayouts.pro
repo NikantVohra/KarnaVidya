@@ -14,6 +14,8 @@ INSTALLS += target
 
 FORMS += \
     mainwindow.ui
+QT += webkit webkitwidgets
+
 
 OTHER_FILES +=
 

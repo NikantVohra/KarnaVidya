@@ -4,6 +4,8 @@
 #include <QTextStream>
 #include <QJsonDocument>
 #include <QShortcut>
+#include<QUrl>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -12,16 +14,24 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->searchButton, SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
     connect(ui->enterWordEdit, SIGNAL(returnPressed()), this, SLOT(searchButtonClicked()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), this, SLOT(tabChanged()));
     QShortcut *shortcut = new QShortcut(QKeySequence(Qt::Key_Space), ui->synonymList);
     connect(shortcut, SIGNAL(activated()), this, SLOT(synonymPressed()));
     readFile();
 }
 
+void MainWindow::setupTabWidget(){
 
+}
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+void MainWindow::tabChanged() {
+    if(ui->tabWidget->currentIndex() == 2) {
+        ui->wikipediaWebView->load(QUrl("http://en.wikipedia.org/wiki/"+currentWord));
+    }
 }
 
 void MainWindow::synonymPressed() {
@@ -32,14 +42,17 @@ void MainWindow::synonymPressed() {
 
 void MainWindow::searchButtonClicked(){
     QString word = ui->enterWordEdit->text();
+    currentWord = word;
     if(dictionary.contains(word)) {
-        ui->englishTextEdit->setText(dictionary[word]->getMeaningEnDescription());
+        ui->englishPlainTextEdit->setPlainText(dictionary[word]->getMeaningEnDescription());
         ui->tamilTextEdit->setText(dictionary[word]->getMeaningTaDescription());
+        tabChanged();
         populateSynonyms(word);
     }
     else {
-        ui->englishTextEdit->setText("No such word available in dictionary");
+        ui->englishPlainTextEdit->setPlainText("No such word available in dictionary");
         ui->tamilTextEdit->setText("No such word available in dictionary");
+        tabChanged();
         ui->synonymList->clear();
     }
 }
