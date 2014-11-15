@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>Dictionary.txt</file>
+        <file>20meaningObject.txt</file>
+        <file>20meaningObjectNew.txt</file>
     </qresource>
 </RCC>

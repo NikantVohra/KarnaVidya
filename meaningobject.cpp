@@ -1,5 +1,5 @@
 #include "meaningobject.h"
-
+#include <QStringList>
 
 MeaningObject::MeaningObject(QObject *parent) :
     QObject(parent)
@@ -48,22 +48,22 @@ void MeaningObject::setSynonymEn(const QList<QString> &value)
 {
     synonymEn = value;
 }
-QHash<QString, QString> MeaningObject::getMeaningEn() const
+OrderedMap<QString, QString> MeaningObject::getMeaningEn() const
 {
     return meaningEn;
 }
 
-void MeaningObject::setMeaningEn(const QHash<QString, QString> &value)
+void MeaningObject::setMeaningEn(const OrderedMap<QString, QString> &value)
 {
     meaningEn = value;
 }
 
-QHash<QString, QString> MeaningObject::getMeaningTa() const
+OrderedMap<QString, QString> MeaningObject::getMeaningTa() const
 {
     return meaningTa;
 }
 
-void MeaningObject::setMeaningTa(const QHash<QString, QString> &value)
+void MeaningObject::setMeaningTa(const OrderedMap<QString, QString> &value)
 {
     meaningTa = value;
 }
@@ -73,6 +73,7 @@ void MeaningObject::setMeaningTa(const QHash<QString, QString> &value)
 void MeaningObject::read(const QJsonObject &json) {
     word = json["word"].toString();
     wordTamil = json["word_tamil"].toString();
+    partOfSpeech = json["Part_of_speech"].toString();
     synonymEn.clear();
     QJsonArray synonymEnArray = json["synonym_en"].toArray();
 
@@ -82,15 +83,39 @@ void MeaningObject::read(const QJsonObject &json) {
     }
     meaningEn.clear();
     meaningTa.clear();
-    QJsonObject meaningEnHash = json["meaning_en"].toObject();
-    for(QJsonObject::iterator it=meaningEnHash.begin(); it!= meaningEnHash.end(); it++) {
-        meaningEn.insert(it.key(), it.value().toString());
+
+    QJsonArray meaningEnList = json["meaning_en"].toArray();
+    for(int i = 0;i < meaningEnList.size();i++) {
+        QStringList splitted = meaningEnList[i].toString().split("&&");
+        if(splitted.count() == 2) {
+            meaningEn.insert(splitted[0], splitted[1]);
+        }
+        else if(splitted.count() == 1) {
+            meaningEn.insert(splitted[0], "");
+        }
     }
 
-    QJsonObject meaningTaHash = json["meaning_ta"].toObject();
-    for(QJsonObject::iterator it=meaningTaHash.begin(); it!= meaningTaHash.end(); it++) {
-        meaningTa.insert(it.key(), it.value().toString());
+    QJsonArray meaningTaList = json["meaning_ta"].toArray();
+    for(int i = 0;i < meaningTaList.size();i++) {
+        QStringList splitted = meaningTaList[i].toString().split("&&");
+        if(splitted.count() == 2) {
+            meaningTa.insert(splitted[0], splitted[1]);
+        }
+        else if(splitted.count() == 1) {
+            meaningTa.insert(splitted[0], "");
+        }
     }
+
+
+//    QJsonObject meaningEnHash = json["meaning_en"].toObject();
+//    for(QJsonObject::iterator it=meaningEnHash.begin(); it!= meaningEnHash.end(); it++) {
+//        meaningEn.insert(it.key(), it.value().toString());
+//    }
+
+//    QJsonObject meaningTaHash = json["meaning_ta"].toObject();
+//    for(QJsonObject::iterator it=meaningTaHash.begin(); it!= meaningTaHash.end(); it++) {
+//        meaningTa.insert(it.key(), it.value().toString());
+//    }
 
     int count = 1;
     foreach (const QString &key, meaningEn.keys()) {

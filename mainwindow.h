@@ -5,6 +5,7 @@
 
 
 #include "meaningobject.h"
+#include "orderedmap.h"
 #include <QHash>
 
 namespace Ui {
@@ -14,6 +15,7 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);

@@ -6,6 +6,7 @@
 #include <QList>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <orderedmap.h>
 
 class MeaningObject : public QObject
 {
@@ -26,11 +27,11 @@ public:
     QList<QString> getSynonymEn() const;
     void setSynonymEn(const QList<QString> &value);
 
-    QHash<QString, QString> getMeaningEn() const;
-    void setMeaningEn(const QHash<QString, QString> &value);
+    OrderedMap<QString, QString> getMeaningEn() const;
+    void setMeaningEn(const OrderedMap<QString, QString> &value);
 
-    QHash<QString, QString> getMeaningTa() const;
-    void setMeaningTa(const QHash<QString, QString> &value);
+    OrderedMap<QString, QString> getMeaningTa() const;
+    void setMeaningTa(const OrderedMap<QString, QString> &value);
 
     void read(const QJsonObject &json);
 
@@ -54,8 +55,9 @@ private:
     QString wordTamil;
     QString partOfSpeech;
     QList<QString> synonymEn;
-    QHash<QString, QString> meaningEn;
-    QHash<QString, QString> meaningTa;
+    OrderedMap<QString, QString> meaningEn;
+    OrderedMap<QString, QString> meaningTa;
+
     QString meaningEnDescription;
     QString meaningTaDescription;
     QString synonymsList;

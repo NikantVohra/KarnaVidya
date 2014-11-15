@@ -6,11 +6,14 @@
 #include <QShortcut>
 #include<QUrl>
 
+static QString const names[] = { "Noun", "Verb",
+                                "Adjective", "Adverb", "Adjective", "" };
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
     connect(ui->searchButton, SIGNAL(clicked()), this, SLOT(searchButtonClicked()));
     connect(ui->enterWordEdit, SIGNAL(returnPressed()), this, SLOT(searchButtonClicked()));
@@ -68,13 +71,21 @@ void MainWindow::searchButtonClicked(){
     }
 }
 
+
+
 void MainWindow::populateEnglishMeaningList() {
     ui->englishMeaningListWidget->clear();
     int count = 1;
     QString meaningEnDescription;
-    QHash<QString, QString> meaningEn = dictionary[currentWord]->getMeaningEn();
+    OrderedMap<QString, QString> meaningEn = dictionary[currentWord]->getMeaningEn();
     foreach (const QString &key, meaningEn.keys()) {
-        meaningEnDescription = QString::number(count) + ". " + key + ":" + meaningEn[key] + "\n";
+        if(meaningEn[key] != "") {
+            meaningEnDescription = QString::number(count) + ". " + key + "\n  " + meaningEn[key];
+        }
+        else {
+            meaningEnDescription = QString::number(count) + ". " + key;
+        }
+
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(meaningEnDescription);
         ui->englishMeaningListWidget->insertItem(count-1, item);
@@ -82,13 +93,20 @@ void MainWindow::populateEnglishMeaningList() {
     }
 }
 
+
+
 void MainWindow::populateTamilMeaningList() {
     ui->tamilMeaningsListWidget->clear();
     int count = 1;
     QString meaningTaDescription;
-    QHash<QString, QString> meaningTa = dictionary[currentWord]->getMeaningTa();
+    OrderedMap<QString, QString> meaningTa = dictionary[currentWord]->getMeaningTa();
     foreach (const QString &key, meaningTa.keys()) {
-        meaningTaDescription = QString::number(count) + ". " + key + ":" + meaningTa[key] + "\n";
+        if(meaningTa[key] != ""){
+            meaningTaDescription = QString::number(count) + ". " + key + "\n  " + meaningTa[key];
+        }
+        else {
+            meaningTaDescription = QString::number(count) + ". " + key;
+        }
         QListWidgetItem *item = new QListWidgetItem;
         item->setText(meaningTaDescription);
         ui->tamilMeaningsListWidget->insertItem(count-1, item);
@@ -115,8 +133,7 @@ void MainWindow::removeSynonyms() {
 }
 
 void MainWindow::readFile() {
-    QFile file(":/Dictionary.txt");
-    QString meaning;
+    QFile file(":/20meaningObjectNew.txt");
 
     if(file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&file);

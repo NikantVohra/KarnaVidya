@@ -2,7 +2,8 @@ QT += widgets
 
 HEADERS     = \
     mainwindow.h \
-    meaningobject.h
+    meaningobject.h \
+    orderedmap.h
 SOURCES     = \
               main.cpp \
     mainwindow.cpp \
